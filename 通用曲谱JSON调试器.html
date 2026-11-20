@@ -10,6 +10,9 @@
 .midi-title{font-size:18px;font-weight:650;color:#26435e;cursor:pointer}.midi-tracks{display:grid;gap:7px;max-height:200px;overflow:auto;margin:12px 0;padding:10px;background:#f6f8fb;border-radius:7px}.midi-tracks label{font-size:13px;align-items:flex-start;overflow-wrap:anywhere}.midi-report{margin-top:12px;overflow-wrap:anywhere}#midi-meta{overflow-wrap:anywhere;min-width:0}#midi-tracks input{margin-top:5px;flex:none}#midi-options[hidden]{display:none}
 </style><style>.notation-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;margin-top:14px}.notation-grid>div{min-width:0}.notation-grid .controls{align-items:flex-start}.notation-grid label{font-size:13px;flex-wrap:wrap}.notation-title{font-size:18px;font-weight:650;color:#26435e;cursor:pointer}#notation-name{width:100%;max-width:310px}#notation-text{height:235px;margin-top:10px;font-size:15px;line-height:1.8}#notation-keypad{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}#notation-keypad button{min-width:36px;padding:6px 9px}.notation-help{margin-top:12px;font-size:13px}.notation-help code{background:#edf2f7;border-radius:3px;padding:1px 4px;white-space:normal;overflow-wrap:anywhere}#notation-reference{margin-top:14px;border-top:1px solid #dce5ee;padding-top:12px}#notation-reference img{display:block;max-width:100%;max-height:680px;object-fit:contain;margin:10px auto}#notation-reference img[hidden],#notation-reference iframe[hidden]{display:none}#notation-reference iframe{display:block;width:100%;height:600px;border:1px solid #dce5ee;margin-top:10px}#notation-report,#notation-feedback,#notation-reference-name{overflow-wrap:anywhere}@media(max-width:920px){.notation-grid{grid-template-columns:1fr}}@media(max-width:480px){#notation-text{font-size:14px}.notation-grid{gap:10px}}
 </style><style>.omr-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;margin-top:14px}.omr-grid>div{min-width:0}#omr-panel>.controls label{font-size:13px;max-width:100%;flex-wrap:wrap}#omr-name{max-width:230px;width:100%}#omr-first{width:76px}#omr-filename{overflow-wrap:anywhere}#omr-viewport{max-height:560px;max-width:100%;overflow:auto;border:1px solid #dce5ee;border-radius:8px;margin:12px 0;background:#f3f5f8}#omr-canvas{max-width:none;height:auto;margin:0;border:0;border-radius:0;cursor:pointer;display:block}#omr-rows input.omr-symbol{width:95px}#omr-rows input.omr-beats{width:70px}#omr-rows input[type=checkbox]{width:auto}.omr-table td{padding:6px}.omr-table td:nth-child(5){white-space:normal;min-width:90px;max-width:180px;font-size:12px}#omr-measure{max-width:175px}#omr-status{white-space:pre-wrap}#omr-panel p code{overflow-wrap:anywhere}@media(max-width:1050px){.omr-grid{grid-template-columns:1fr}}@media(max-width:480px){#omr-viewport{max-height:390px}.omr-table{max-height:350px}}
+.omr-pages{margin:12px 0;padding:12px;background:#f6f8fb;border:1px solid #dce5ee;border-radius:8px}.omr-pages[hidden]{display:none}#omr-page{max-width:100%;min-width:0;flex:1;width:360px}#omr-page-summary{white-space:pre-wrap;overflow-wrap:anywhere}.omr-pages label{max-width:100%;min-width:0;white-space:nowrap}.omr-pages button{font-size:13px;padding:6px 10px}
+#omr-viewport{cursor:grab;touch-action:none;user-select:none;overscroll-behavior:contain}#omr-viewport.panning,#omr-viewport.panning #omr-canvas{cursor:grabbing}#omr-canvas{cursor:inherit}#omr-zoom{font-variant-numeric:tabular-nums;display:inline-block;min-width:44px}.omr-page-nav{justify-content:center;margin:8px 0 12px;gap:14px}
+.omr-reading-help{margin:14px 0;padding:12px;border:1px solid #dce5ee;border-radius:8px;background:#f6f8fb;font-size:13px;line-height:1.65}.omr-reading-help>summary{font-size:15px;font-weight:650;cursor:pointer}.omr-reading-help>summary::after{content:"点击展开";font-size:12px;font-weight:400;color:#607387;margin-left:10px}.omr-reading-help[open]>summary{margin-bottom:8px}.omr-reading-help[open]>summary::after{content:"点击收起"}.omr-reading-help>summary:focus-visible{outline:2px solid #285b87;outline-offset:4px}.omr-reading-help p{margin:9px 0}.omr-reading-help table{white-space:normal;table-layout:fixed;font-size:13px;margin:10px 0}.omr-reading-help td,.omr-reading-help th{white-space:normal;overflow-wrap:anywhere;vertical-align:top;padding:7px 6px;position:static}.omr-reading-help th:nth-child(1){width:28%}.omr-reading-help th:nth-child(2){width:24%}.omr-reading-help code{white-space:normal;overflow-wrap:anywhere;color:#28506f}
 </style></head>
 <body><main>
 <header><div><h1>离线调速试听与 JSON 调试</h1><p class="muted">单个 HTML 即可使用，可导入其他曲谱。修改后请下载 JSON 保存。</p></div><span class="badge">无需联网 · 21 键</span></header>
@@ -17,19 +20,42 @@
 <section class="card"><details id="midi-panel"><summary class="midi-title">MIDI 导入与 21 键自动适配</summary><p class="muted">导入标准格式 0/1 的 .mid 或 .midi，选轨后生成曲谱，即可用下方音符图修改。导出 MIDI 使用播放器旁的按钮。</p><div class="toolbar"><label class="file-label" for="midi-file">选择 MIDI 文件</label><input id="midi-file" type="file" accept=".mid,.midi,audio/midi,audio/x-midi" hidden><span id="midi-meta" class="muted">尚未选择 MIDI</span></div><div id="midi-options" hidden><div class="toolbar" style="margin-top:12px"><button id="midi-select-all">全选音轨</button><button id="midi-select-none">取消全选</button></div><div id="midi-tracks" class="midi-tracks"></div><div class="controls"><label>移调半音 <input id="midi-transpose" type="number" min="-48" max="48" step="1" value="0"></label><label><input id="midi-sustain" type="checkbox" checked>计入延音踏板</label><label><input id="midi-drums" type="checkbox">也转换鼓音</label><button id="midi-convert" class="primary" disabled>生成 21 键曲谱</button></div><p class="muted">超音域先按八度移入 C3–B5（MIDI 48–83），升降音再映射最近白键，等距向下。同键同时出现会合并，前后重叠会截短前音以保留重按。再次生成会新增曲目，保留当前修改。</p></div><div id="midi-report" class="midi-report" role="status"></div><p class="muted">变速会按实际秒数折算为单一 BPM。JSON 无法保留原 MIDI 的全部音高、力度、音色、弯音及轨道；导出的是当前 21 键改编，统一钢琴音色与力度。</p></details></section>
 <section class="card"><details id="omr-panel"><summary class="notation-title">简谱图片识别 → JSON / MIDI</summary>
 <p class="muted">适用于清晰、端正、带小节线的印刷数字简谱。识别数字、八度点、减时线、附点、和弦和延音；生成后可继续在音符图修改。手写、歪斜照片或复杂特殊记号可能需要较多校正。</p>
-<div class="controls"><label class="file-label" for="omr-file">选择简谱图片</label><input id="omr-file" type="file" accept=".png,.jpg,.jpeg,.webp,.bmp" hidden><span id="omr-filename" class="muted">尚未选择图片</span></div>
+<div class="controls"><label class="file-label" for="omr-file">添加简谱图片（可多选）</label><input id="omr-file" type="file" accept=".png,.jpg,.jpeg,.webp,.bmp" multiple hidden><span id="omr-filename" class="muted">尚未选择图片</span></div>
+<div id="omr-pages" class="omr-pages" hidden><div class="toolbar"><label>谱页 <select id="omr-page" aria-label="当前谱页"></select></label><button id="omr-page-up">顺序前移</button><button id="omr-page-down">顺序后移</button><button id="omr-page-remove">移除当前页</button></div><p id="omr-page-summary" class="muted" role="status"></p><div class="toolbar"><button id="omr-recognize-all">识别全部未识别页</button><button id="omr-to-text-all" disabled>全部页放入文字简谱区</button><button id="omr-generate-all" class="primary" disabled>合并全部页生成曲目</button></div><p class="muted">按上方顺序连接谱页，同一声部逐页续接。曲名、BPM、调号、拍号和声部数用于全部页；每页分别核对识别结果。再次添加会追加谱页，选择同一原图则恢复对照并保留校正。</p></div>
 <div class="controls" style="margin-top:12px"><label>曲名 <input id="omr-name" value="图片识别曲目" maxlength="200"></label><label>BPM <input id="omr-bpm" type="number" min="4" max="1000" value="120"></label><label>1 = <select id="omr-key"><option>C</option><option>C#</option><option>D</option><option>Eb</option><option>E</option><option>F</option><option>F#</option><option>G</option><option>Ab</option><option>A</option><option>Bb</option><option>B</option></select></label><label>拍号 <select id="omr-meter"><option>4/4</option><option>3/4</option><option>2/4</option><option>6/8</option><option>3/8</option><option>5/4</option><option>7/8</option><option>12/8</option></select></label><label>每组声部 <select id="omr-staves"><option value="1">1 个</option><option value="2" selected>2 个（双手）</option><option value="3">3 个</option><option value="4">4 个</option></select></label><label>起始小节 <input id="omr-first" type="number" min="1" step="1" value="1"></label></div>
 <div class="toolbar" style="margin-top:12px"><button id="omr-recognize" class="primary" disabled>识别这张图片</button><button id="omr-to-text" disabled>识别结果放入文字简谱区</button><button id="omr-generate" disabled>生成曲目并进入音符图</button></div>
 <p class="muted">速度、调号和拍号请按原谱填写；续页常没有这些信息。120 BPM 是可调整的录入起点。原简谱 MIDI 保留半音和原音域，游戏 JSON 自动适配 21 键。</p>
 <div id="omr-status" class="status" role="status">选择图片后点击识别。文件仅在本机处理，无需联网。</div>
 <div id="omr-results" hidden><div class="omr-grid"><div>
-<div class="controls"><label>图片缩放 <select id="omr-zoom"><option value="0.5" selected>50%</option><option value="0.75">75%</option><option value="1">100%</option><option value="1.5">150%</option></select></label><label><input id="omr-boxes" type="checkbox" checked>显示识别框</label><button id="omr-next-issue">下一处提示</button></div>
-<div id="omr-viewport"><canvas id="omr-canvas" aria-label="简谱识别框，点击音符定位到校对表"></canvas></div><p class="muted">点击图片上的框定位小节。蓝框为识别结果，橙框为待核对项，红框为拍数异常的小节；所选小节用深蓝框显示。</p>
-</div><div>
+<div class="controls"><span>缩放 <output id="omr-zoom">50%</output></span><button id="omr-fit">适应宽度</button><label><input id="omr-boxes" type="checkbox" checked>显示识别框</label><button id="omr-next-issue">下一处提示</button></div>
+<div id="omr-viewport" tabindex="0" aria-label="简谱图片：滚轮缩放，按住拖动，点击识别框定位小节"><canvas id="omr-canvas" aria-label="简谱识别框，点击音符定位到校对表"></canvas></div>
+<div class="toolbar omr-page-nav"><button id="omr-page-prev">上一页</button><span id="omr-page-position" class="muted"></span><button id="omr-page-next">下一页</button></div>
+<p class="muted">滚轮以鼠标位置为中心连续缩放，按住鼠标左键拖动图片；轻点识别框定位小节。蓝框为识别结果，橙框为待核对项，红框为拍数异常的小节；所选小节用深蓝框显示。</p>
+</div><div id="omr-corrections">
 <div class="controls"><label>声部 <select id="omr-voice"></select></label><label>小节 <select id="omr-measure"></select></label><span id="omr-measure-stats" class="muted"></span></div>
+<details style="margin-top:10px"><summary>手动增补小节</summary><div class="controls" style="margin-top:10px"><label>本页位置 <input id="omr-new-measure" type="number" min="1" max="1024" step="1" value="1"></label><label>方式 <select id="omr-new-measure-mode"><option value="fill">补录缺失小节（不改已有编号）</option><option value="insert">插入新小节（后续编号顺延）</option></select></label><label>范围 <select id="omr-new-measure-scope"><option value="voice">仅当前声部</option><option value="all">所有声部</option></select></label></div><div class="toolbar" style="margin-top:10px"><button id="omr-insert-measure">增加小节并录入</button><button id="omr-undo-measure" disabled>撤销本次增补</button></div><p class="muted">位置按本页从 1 开始计数，不受“起始小节”显示编号影响。漏掉左手第 8 小节时，先选左手，位置填 8，选择补录。新增小节初始为空，需在下方追加音符、填写拍长并保存；不会自动填成休止。</p></details>
 <div class="table-wrap omr-table"><table><thead><tr><th>格</th><th>数字 / 和弦</th><th>拍长</th><th>延续前音</th><th>提示</th><th></th></tr></thead><tbody id="omr-rows"></tbody></table></div>
 <div class="toolbar"><button id="omr-add-note">追加一格</button><button id="omr-write-measure">保存这一小节的校正</button></div>
-<p class="muted">音区写 <code>1'</code> 高八度、<code>1,</code> 低八度；和弦写 <code>(135)</code>，休止写 <code>0</code>，延音线写 <code>-</code>。半拍填 0.5，附点四分音符填 1.5。修改输入后先保存本小节。</p>
+<details id="omr-reading-help" class="omr-reading-help" aria-labelledby="omr-reading-help-title">
+<summary id="omr-reading-help-title">简谱符号与拍长对照</summary>
+<p><strong>本工具以四分音符为 1 拍。</strong>“数字 / 和弦”栏填写音符，“拍长”栏单独填写时值。例如数字下有一横的 <code>6</code>：数字栏填 <code>6</code>，拍长填 <code>0.5</code>。</p>
+<table aria-label="简谱时值速查"><thead><tr><th>谱面记号</th><th>拍长填写</th><th>说明</th></tr></thead><tbody>
+<tr><td>数字下无横线</td><td><code>1</code></td><td>四分音符</td></tr>
+<tr><td>数字下一横</td><td><code>0.5</code></td><td>八分音符，半拍</td></tr>
+<tr><td>数字下两横</td><td><code>0.25</code></td><td>十六分音符，四分之一拍</td></tr>
+<tr><td>数字下三横</td><td><code>0.125</code></td><td>三十二分音符；每多一横，时值减半</td></tr>
+<tr><td>数字右侧一个附点</td><td>原拍长 × <code>1.5</code></td><td>无横线 → <code>1.5</code>；一横 → <code>0.75</code>；两横 → <code>0.375</code></td></tr>
+<tr><td>数字右侧两个附点</td><td>原拍长 × <code>1.75</code></td><td>无横线 → <code>1.75</code>；一横 → <code>0.875</code></td></tr>
+<tr><td>数字后加延音横线</td><td>每条延长 1 拍</td><td><code>1 —</code> 共 <code>2</code> 拍；<code>1 — —</code> 共 <code>3</code> 拍；<code>1 — — —</code> 共 <code>4</code> 拍</td></tr>
+</tbody></table>
+<p><strong>延音怎么填：</strong>可把 <code>1 —</code> 合并为数字 <code>1</code>、拍长 <code>2</code>；也可分为一格 <code>1</code>（1 拍）和一格 <code>-</code>（1 拍，延续前音）。两种写法选一种，避免重复计算时长。</p>
+<p><strong>同音连线：</strong>后一个同音音符勾选“延续前音”，拍长仍填这一格自身的时值，播放时不重新按键。不同音高之间的连奏弧线不表示把音符合并成同一个长音。灰色音符是否延续前音，需按原谱约定核对。</p>
+<p><strong>八度点：</strong>数字上方一个点写 <code>1'</code>，两个点写 <code>1''</code>；下方一个点写 <code>1,</code>，两个点写 <code>1,,</code>。上下的点改变音高；右侧附点改变时值。</p>
+<p><strong>休止与和弦：</strong><code>0</code> 表示休止，拍长照减时线、附点填写；竖排同时发声的音写成 <code>(135)</code>，整组共用一份拍长，三个音的和弦填 1 拍仍是 1 拍。</p>
+<p><strong>升降记号：</strong>升音写 <code>#4</code>，降音写 <code>b7</code>，还原记号写 <code>♮4</code>。</p>
+<p><strong>小节拍数：</strong>按本工具的四分音符计量，<code>4/4</code> 每小节合计 4 拍，<code>3/4</code> 合计 3 拍，<code>2/4</code> 合计 2 拍；<code>6/8</code> 的六个八分音符合计 3 拍。左右手各自核对，不把两个声部的拍长相加；休止和延音也计入总拍长。</p>
+<p>修改后点击“保存这一小节的校正”。弱起或不完整尾小节可送到文字简谱区按原谱处理，不要为了通过检查而随意补拍。</p>
+</details>
 <label><input id="omr-reviewed" type="checkbox">我已对照图片核对剩余形状提示</label><p class="muted">拍数异常的小节必须修正；弱起或不完整尾小节可放入文字简谱区按原谱处理。谱面图片不随工程打包，工程保留识别结果、校正记录及原图文件名/哈希，重开后可重新选择原图。</p>
 </div></div></div>
 </details></section>
@@ -41,7 +67,7 @@
 <div class="controls" style="margin-top:10px"><label>1 = <select id="notation-key"><option>C</option><option>C#</option><option>D</option><option>Eb</option><option>E</option><option>F</option><option>F#</option><option>G</option><option>Ab</option><option>A</option><option>Bb</option><option>B</option></select></label><label>拍号 <select id="notation-meter"><option>4/4</option><option>3/4</option><option>2/4</option><option>6/8</option><option>3/8</option><option>5/4</option><option>7/8</option><option>12/8</option></select></label><label>默认音长 <select id="notation-unit"><option value="1">1 拍</option><option value="0.5">半拍</option><option value="0.25">1/4 拍</option><option value="2">2 拍</option></select></label><label>持键 % <input id="notation-gate" type="number" min="10" max="100" value="95"></label></div>
 <div class="controls" style="margin-top:10px"><label><input id="notation-pad" type="checkbox" checked>小节不足补休止</label><label><input id="notation-pickup" type="checkbox" checked>允许首小节弱起</label><label><input id="notation-adapt" type="checkbox" checked>自动适配 21 键</label><label><input id="notation-spaces" type="checkbox">键位谱空格占一格</label></div>
 <textarea id="notation-text" spellcheck="false" aria-label="简谱输入区" placeholder="1 1 5 5 | 6 6 5:2 |&#10;双手可写：R: 1 2 3 4 |&#10;　　　　　L: (1,3,5,):4 |"></textarea>
-<div class="toolbar"><label class="file-label" for="notation-file">导入 TXT / 参考图片 / PDF</label><input id="notation-file" type="file" accept=".txt,.png,.jpg,.jpeg,.webp,.gif,.bmp,.pdf" hidden><select id="notation-example-kind" aria-label="简谱示例"><option value="melody">单声部旋律</option><option value="voices">双手声部</option><option value="ornaments">和弦与装饰音</option><option value="keys">键位谱琶音</option></select><button id="notation-example">填入示例</button></div>
+<div class="toolbar"><label class="file-label" for="notation-file">导入 TXT / 参考图片 / PDF</label><input id="notation-file" type="file" multiple accept=".txt,.png,.jpg,.jpeg,.webp,.gif,.bmp,.pdf" hidden><select id="notation-example-kind" aria-label="简谱示例"><option value="melody">单声部旋律</option><option value="voices">双手声部</option><option value="ornaments">和弦与装饰音</option><option value="keys">键位谱琶音</option></select><button id="notation-example">填入示例</button></div>
 <div class="toolbar" style="margin-top:12px"><button id="notation-generate" class="primary">生成并进入音符图</button><button id="notation-original-midi" disabled>导出该曲原简谱 MIDI</button><button id="notation-load-source" disabled>载入该曲原简谱</button></div>
 <p id="notation-feedback" class="status" role="status">请按原谱填写速度和音值。默认 120 BPM 是录入起点，可自行调整。</p><div id="notation-report"></div>
 </div><div>
@@ -188,7 +214,7 @@ function parse(input){
   let timing;
   if(division&0x8000){const code=256-(division>>8),sub=division&255;if(![24,25,29,30].includes(code)||!sub)throw Error('MIDI SMPTE 时间分辨率无效。');timing={kind:'smpte',fps:code===29?30000/1001:code,sub};}
   else{if(!division)throw Error('MIDI 每拍 tick 不能为 0。');timing={kind:'ppqn',ppqn:division}}
-  const tracks=[],events=[],tempos=[],signatures=[];let lastTick=0,pitchBends=0;
+  const tracks=[],events=[],tempos=[],signatures=[];let lastTick=0,pitchBends=0,volumeRepairs=0;
   while(tracks.length<trackCount){
     limit=bytes.length;const id=tag(),length=u32();need(length);const end=p+length;
     if(id!=='MTrk'){p=end;continue}limit=end;
@@ -207,7 +233,10 @@ function parse(input){
       }
       if(status===0xf0||status===0xf7){running=0;const size=vlq();need(size);p+=size;continue}
       if(status<0x80||status>=0xf0)throw Error('MIDI 中有不支持的系统事件：0x'+status.toString(16));
-      running=status;const kind=status>>4,channel=status&15,a=u8(),b=kind===0xc||kind===0xd?0:u8();
+      running=status;const kind=status>>4,channel=status&15,a=u8();let b=kind===0xc||kind===0xd?0:u8();
+      // Some exporters encode maximum channel volume as CC7=255. Repair only
+      // this known value; keep rejecting invalid note pitches and other data.
+      if(kind===0xb&&a===7&&b===255){b=127;volumeRepairs++}
       if(a>127||b>127)throw Error('MIDI 通道数据字节超出 0–127。');
       if(kind===9&&b){track.notes++;if(channel===9)track.drums++}
       if(kind===8||kind===9||kind===0xb)events.push({tick,kind,channel,a,b,track:track.index,order:order++});
@@ -239,7 +268,7 @@ function parse(input){
   for(const queue of active.values())for(const n of queue){dangling++;release(n,Math.max(lastTick,n.start+1),true)}
   for(let c=0;c<16;c++)finishPedal(c,lastTick);
   signatures.sort((a,b)=>a.tick-b.tick||a.order-b.order);
-  return {format,timing,tracks,notes,tempoMap,lastTick,secondsAt,duration:secondsAt(lastTick),timeSignature:signatures.filter(s=>s.tick===0).at(-1)?.value||'4/4',warnings:{orphanOffs,dangling,zeroLength,pitchBends}};
+  return {format,timing,tracks,notes,tempoMap,lastTick,secondsAt,duration:secondsAt(lastTick),timeSignature:signatures.filter(s=>s.tick===0).at(-1)?.value||'4/4',warnings:{orphanOffs,dangling,zeroLength,pitchBends,volumeRepairs}};
 }
 function mapPitch(note,transpose=0){
   const shifted=note+transpose;let folded=shifted;
@@ -321,6 +350,7 @@ root.createMusicMidiUI=function(options){
     const p=document.createElement('p');p.textContent=report.source+' · 所选 '+report.selectedNotes+' → 输出 '+report.outputNotes+' 个音符';$('midi-report').append(p);
     const stats=document.createElement('p');stats.className='muted';stats.textContent='八度调整 '+report.octaveAdjusted+' · 升降音调整 '+report.accidentalsAdjusted+' · 同起点合并 '+report.duplicatesMerged+' · 重叠截短 '+report.overlapsClipped+' · 踏板延长 '+report.sustainExtended+' · 排除鼓音 '+report.excludedDrums;$('midi-report').append(stats);
     const w=report.warnings||{},notices=[];
+    if(w.volumeRepairs)notices.push('原文件有 '+w.volumeRepairs+' 处通道音量（CC7）写成 255，已按最大合法值 127 修正；音符音高与时间不变。');
     if(report.tempoChanges)notices.push('原 MIDI 有 '+report.tempoChanges+' 次速度设置变化，已按实际秒数折算；原快慢变化保留在音符时刻中。');
     if(report.timing==='smpte')notices.push('SMPTE 时间已按帧率换算为秒数。');
     if(w.dangling)notices.push('原文件有 '+w.dangling+' 个音符缺少松键，已在谱尾补齐。');
@@ -339,7 +369,7 @@ root.createMusicMidiUI=function(options){
       for(const track of midi.tracks){if(!track.notes)continue;const label=document.createElement('label'),input=document.createElement('input');input.type='checkbox';input.value=track.index;input.checked=track.notes>track.drums;input.dataset.track=track.index;
         label.append(input,document.createTextNode('轨 '+(track.index+1)+' · '+(track.name||'未命名')+' · '+track.notes+' 音'+(track.drums?'（鼓音 '+track.drums+'）':'')));$('midi-tracks').append(label)}
       const timing=midi.timing.kind==='ppqn'?midi.timing.ppqn+' ticks/拍':'SMPTE '+midi.timing.fps.toFixed(2)+' 帧/秒';
-      $('midi-meta').textContent=file.name+' · 格式 '+midi.format+' · '+midi.tracks.length+' 轨 · '+midi.notes.length+' 音 · '+timing+' · '+midi.duration.toFixed(2)+' 秒';
+      $('midi-meta').textContent=file.name+' · 格式 '+midi.format+' · '+midi.tracks.length+' 轨 · '+midi.notes.length+' 音 · '+timing+' · '+midi.duration.toFixed(2)+' 秒'+(midi.warnings.volumeRepairs?' · 已修正 '+midi.warnings.volumeRepairs+' 处异常通道音量（255 → 127）':'');
       $('midi-options').hidden=false;$('midi-convert').disabled=!midi.notes.length;
       options.status(midi.notes.length?'MIDI 已解析，选好音轨后点击“生成 21 键曲谱”。':'MIDI 中没有音符。',!midi.notes.length);
     }catch(e){if(thisGeneration!==generation)return;$('midi-meta').textContent='解析失败：'+e.message;options.status(e.message,true)}
@@ -614,7 +644,7 @@ root.createMusicNotationUI=function(options){
   const example=examples[type];$('notation-text').value=example.text;setValues({...MusicNotation.defaults(),name:'示例·'+$('notation-example-kind').selectedOptions[0].textContent,mode:example.mode,unit:example.mode==='keys'?0.5:1});changed();options.status('示例已填入；点击“生成并进入音符图”查看。');
  };
  $('notation-generate').onclick=generate;
- $('notation-file').onchange=()=>{if($('notation-file').files[0])prepare($('notation-file').files[0])};
+ $('notation-file').onchange=async()=>{const files=Array.from($('notation-file').files);if(!files.length)return;if(files.length>1&&files.every(f=>/\.(png|jpe?g|webp|bmp)$/i.test(f.name))){await options.onImages?.(files);$('notation-file').value='';return}if(files.length!==1){options.status('可多选简谱图片；TXT / PDF 请单独导入，图片不能与其他类型混选。',true);$('notation-file').value='';return}prepare(files[0])};
  $('notation-close-reference').onclick=()=>{if(referenceURL)URL.revokeObjectURL(referenceURL);referenceURL=null;referenceName='';$('notation-image').removeAttribute('src');$('notation-pdf').removeAttribute('src');$('notation-reference').hidden=true;changed()};
  $('notation-original-midi').onclick=()=>{try{
   const source=currentRecord?.notationSource;if(!source)throw Error('当前曲目没有简谱来源。');const result=MusicNotation.convert(source.text,source.options),bytes=MusicNotation.writeMidi(result),url=URL.createObjectURL(new Blob([bytes],{type:'audio/midi'})),a=document.createElement('a');
@@ -667,6 +697,43 @@ function makeTemplates(){
  }
  return templates;
 }
+function splitJoined(gray,width,box,H,threshold,classify){
+ // A pair of touching digits can have no white column at all. Search narrow
+ // ink valleys, but accept a partition only if every piece looks like a full
+ // digit and the whole sequence scores substantially better than one glyph.
+ if(box.w<H*.9)return [box];
+ const whole=classify(box);if(whole.score<.20&&box.w<H*1.15||/^[#b♮]$/.test(whole.char)&&whole.score<.30)return [box];
+ const projection=Array(box.w).fill(0),radius=Math.max(1,Math.round(H*.04)),margin=Math.max(2,Math.round(H*.18));
+ for(let x=0;x<box.w;x++)for(let y=box.y;y<box.y+box.h;y++)if(gray[y*width+box.x+x]<threshold)projection[x]++;
+ const valleys=[];
+ for(let x=margin;x<box.w-margin;x++){
+  if(projection[x]>H*.30)continue;let minimum=projection[x];for(let j=Math.max(0,x-radius);j<=Math.min(box.w-1,x+radius);j++)minimum=Math.min(minimum,projection[j]);
+  if(projection[x]!==minimum)continue;const last=valleys.at(-1);if(last!==undefined&&x-last<=radius*2){if(projection[x]<=projection[last])valleys[valleys.length-1]=x}else valleys.push(x);
+ }
+ const cuts=new Set([0,box.w]);for(const x of valleys.slice(0,24))for(const d of [-1,0,1])if(x+d>=margin&&x+d<=box.w-margin)cuts.add(x+d);
+ const edges=Array.from(cuts).sort((a,b)=>a-b),cache=new Map(),limit=Math.min(8,Math.floor(box.w/(H*.18)));let best=null;
+ function part(a,b){
+  const id=a+':'+b;if(cache.has(id))return cache.get(id);let result=null;
+  if(b-a>=H*.18&&b-a<=H*1.05){
+   let x0=box.x+b,y0=box.y+box.h,x1=0,y1=0,n=0;
+   for(let y=box.y;y<box.y+box.h;y++)for(let x=box.x+a;x<box.x+b;x++)if(gray[y*width+x]<threshold){x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);n++}
+   const w=x1-x0+1,h=y1-y0+1;
+   if(n>H*1.2&&h>=H*.72&&w>=H*.15){const q={...box,x:x0,y:y0,w,h,cx:x0+w/2,cy:y0+h/2,n},m=classify(q);if(/^[0-7]$/.test(m.char)&&m.score<=.30&&m.margin>=.02)result={box:q,score:m.score}}
+  }
+  cache.set(id,result);return result;
+ }
+ let states=new Map([[0,{cost:0,parts:[]}]]);
+ for(let count=1;count<=limit;count++){
+  const next=new Map();for(const [start,state] of states)for(let end=start+1;end<edges.length;end++){
+   if(edges[end]-edges[start]>H*1.05)break;const p=part(edges[start],edges[end]);if(!p)continue;
+   const cost=state.cost+p.score+(start?projection[edges[start]]/H*.08:0),previous=next.get(end);
+   if(!previous||cost<previous.cost)next.set(end,{cost,parts:[...state.parts,p.box]});
+  }
+  const complete=next.get(edges.length-1);if(count>=2&&complete){const score=complete.cost/count+.035*(count-1);if(score<whole.score-.08&&(!best||score<best.score))best={score,parts:complete.parts}}
+  states=next;if(!states.size)break;
+ }
+ return best?best.parts.map(p=>({...p,splitFrom:{x:box.x,y:box.y,w:box.w,h:box.h}})):[box];
+}
 function analyze(image,templates,options={}){
  const w=image.width,h=image.height;if(w*h>12000000||w<80||h<60)throw Error('识别图像尺寸无效，请使用清晰谱图（不超过 1200 万像素）。');
  const threshold=options.threshold||210,gray=new Uint8Array(w*h);
@@ -684,6 +751,20 @@ function analyze(image,templates,options={}){
   const long=vertical.filter(c=>c.h>=H*4.4&&c.y<=s.cy&&c.y+c.h>=s.cy&&c.x<Math.min(...s.bars));
   s.left=long.length?Math.max(...long.map(c=>c.cx)):Math.min(...s.bars);s.right=Math.max(...s.bars);s.bars=Array.from(new Set([s.left,...s.bars].map(x=>Math.round(x)))).sort((a,b)=>a-b).filter((x,i,a)=>!i||x-a[i-1]>H*.25);s.glyphs=[];
  }
+ const recoveredBarIssues=[];
+ // Slurs can join an otherwise vertical bar line into a wide component.
+ // Recover it only when another voice agrees on x and the local pixels still
+ // contain a sufficiently long vertical stroke. Never invent an empty bar.
+ for(let start=0;start<valid.length;start+=staves){const rows=valid.slice(start,start+staves);
+  for(const row of rows){const peers=rows.filter(s=>s!==row&&s.bars.filter(x=>row.bars.some(y=>Math.abs(x-y)<H*.25)).length>=2);
+   const candidates=Array.from(new Set(peers.flatMap(s=>s.bars)));row.recoveredBars=[];
+   for(const x of candidates){if(row.bars.some(y=>Math.abs(x-y)<H*.25))continue;let longest=0;
+    for(let xx=Math.max(0,Math.round(x-H*.12));xx<=Math.min(w-1,Math.round(x+H*.12));xx++){let run=0;for(let yy=Math.max(0,Math.floor(row.cy-H*2.5));yy<Math.min(h,row.cy+H*2.5);yy++){run=gray[yy*w+xx]<threshold?run+1:0;if(yy>=row.cy-H*.4&&yy-run+1<=row.cy+H*.4)longest=Math.max(longest,run)}}
+    if(longest>=H*1.7){row.bars.push(x);row.recoveredBars.push(x);recoveredBarIssues.push({kind:'barline-recovery',message:'第 '+(Math.floor(start/staves)+1)+' 组声部 '+(rows.indexOf(row)+1)+' 补回一条与连线粘连的小节线，请对照原图核对。',box:{x:x-2,y:Math.max(0,row.cy-H),w:4,h:H*2}})}
+   }
+   row.bars.sort((a,b)=>a-b);row.left=Math.min(...row.bars);row.right=Math.max(...row.bars);
+  }
+ }
  function classify(box){
   const mask=normalize(gray,w,box,threshold),aspect=box.w/box.h,scores=new Map();
   for(const t of templates){let error=0;for(let i=0;i<SIZE;i++)error+=Math.abs(mask[i]-t.mask[i]);const score=error/SIZE+.07*Math.abs(Math.log(aspect/t.aspect));if(!scores.has(t.char)||scores.get(t.char)>score)scores.set(t.char,score)}
@@ -691,14 +772,16 @@ function analyze(image,templates,options={}){
  }
  const extraDots=[],glyphs=[],unrecognized=[];let gid=0;
  for(const component of cc){
-  if(component.h<H*.78||component.h>H*1.55||component.w<H*.15||component.w>H*2.6)continue;
+  if(component.h<H*.78||component.h>H*1.55||component.w<H*.15||component.w>H*6)continue;
   const staff=valid.find(s=>component.cy<=s.cy+H*.4&&component.cy>s.cy-H*4&&component.cx>s.left+H*.65&&component.cx<s.right-H*.25);if(!staff)continue;
   let boxes=[{...component}];
-  if(component.w>H*1.15){
+  if(component.w>H*2.6){boxes=splitJoined(gray,w,boxes[0],H,threshold,classify);if(boxes.length===1)continue}
+  else if(component.w>H*1.15){
    const projections=[];for(let x=component.x;x<component.x+component.w;x++){let n=0;for(let y=component.y;y<component.y+component.h;y++)if(gray[y*w+x]<threshold)n++;projections.push(n)}
    const cuts=[];for(let x=Math.round(H*.35);x<component.w-H*.35;x++)if(projections[x]<=H*.08&&(!cuts.length||x-cuts.at(-1)>H*.3))cuts.push(x);
    if(cuts.length){const edges=[0,...cuts,component.w];boxes=edges.slice(0,-1).map((v,i)=>({...component,x:component.x+v,w:edges[i+1]-v,cx:component.x+(v+edges[i+1])/2})).filter(b=>b.w>H*.15)}
   }
+  boxes=boxes.flatMap(box=>splitJoined(gray,w,box,H,threshold,classify));
   for(let box of boxes){
    let match=classify(box);
    if(box.h>H*1.12&&box.w<H*.9){
@@ -713,6 +796,7 @@ function analyze(image,templates,options={}){
    if(match.score>.37){if(Math.abs(box.cy-staff.cy)<H*.6)unrecognized.push({kind:'unknown',message:'谱行中有未解析的字符或符号，请按原图核对。',box:{x:box.x,y:box.y,w:box.w,h:box.h}});continue}
    let ink=255;for(let yy=box.y;yy<box.y+box.h;yy++)for(let xx=box.x;xx<box.x+box.w;xx++)ink=Math.min(ink,gray[yy*w+xx]);
    const glyph={...box,...match,id:gid++,above:0,below:0,dots:0,accidental:'',ink,tie:false,issues:[]};
+   if(box.splitFrom)glyph.issues.push('相邻数字自动分框，请对照原图核对');
    if(!/^[0-7#b♮]$/.test(glyph.char))glyph.issues.push('非 0–7 数字');if(match.score>.26||match.margin<.018)glyph.issues.push('数字形状待核对');staff.glyphs.push(glyph);glyphs.push(glyph);
   }
  }
@@ -761,7 +845,7 @@ function analyze(image,templates,options={}){
   }
   system.measureCount=Math.max(system.measureCount,staff.measures.length);
  }
- const tracks=Array.from({length:staves},()=>[]),issues=unrecognized.slice();
+ const tracks=Array.from({length:staves},()=>[]),issues=[...unrecognized,...recoveredBarIssues];
  for(const a of accidentals)if(a.issues.includes('升降记号未关联音符'))issues.push({kind:'accidental',message:'有升降记号未能关联到音符，请手动核对。',box:{x:a.x,y:a.y,w:a.w,h:a.h}});
  for(let sy=0;sy<systems.length;sy++){
   const system=systems[sy];if(system.staffs.length!==staves)issues.push({kind:'system',message:'第 '+(sy+1)+' 组识别到 '+system.staffs.length+' 个声部，请核对每组声部数。'});
@@ -793,6 +877,24 @@ function refresh(model,meter='4/4'){
  for(const track of model.tracks)for(const measure of track){measure.beats=measure.groups.reduce((sum,g)=>sum+g.beats,0);measure.issues=[];if(Math.abs(measure.beats-target)>.0001)measure.issues.push('识别为 '+Number(measure.beats.toFixed(4))+' 拍，应为 '+target+' 拍');for(const group of measure.groups){total++;if(group.issues.length)flagged++}if(measure.issues.length)flagged++}
  model.flagged=flagged+model.issues.length;model.groups=total;model.meter=meter;return model;
 }
+function checkMeasures(model){
+ const expected=model.measures??Math.max(...model.tracks.map(t=>t.length));
+ for(let voice=0;voice<model.tracks.length;voice++){const t=model.tracks[voice];for(let n=1;n<=expected;n++)if(!t.some(b=>b.number===n))throw Error('声部 '+(voice+1)+' 缺少本页第 '+n+' 小节，请使用“手动增补小节”补录。');if(t.length!==expected||t.some((b,i)=>b.number!==i+1))throw Error('声部 '+(voice+1)+' 的小节编号或数量不一致，请先增补并核对。')}
+ return model;
+}
+function insertMeasure(model,{voice,number,scope='voice',mode='fill',meter=model.meter||'4/4'}={}){
+ if(!Number.isInteger(voice)||voice<0||voice>=model.tracks.length||!Number.isInteger(number)||number<1||number>1024||!['voice','all'].includes(scope)||!['fill','insert'].includes(mode))throw Error('请选择声部、增补方式和有效的本页小节位置。');
+ const total=model.measures??Math.max(...model.tracks.map(t=>t.length));if(number>total+(mode==='insert'?1:0))throw Error('小节位置超出本页范围；页尾新增请选择“插入新小节”。');
+ const selected=scope==='all'?model.tracks.map((t,i)=>i):[voice],targets=mode==='fill'?selected.filter(v=>!model.tracks[v].some(b=>b.number===number)):selected;
+ if(!targets.length)throw Error('指定位置已有小节；补录不会覆盖已有内容，需要新增时请选择“插入新小节”。');
+ if(targets.some(v=>model.tracks[v].length>=1024)||mode==='insert'&&total>=1024)throw Error('本页最多支持 1024 小节。');
+ const peer=model.tracks.flat().find(b=>b.number===number),peerStaff=peer&&model.staffs.find(s=>s.voice===peer.voice&&s.measures.some(m=>m.number===number));
+ const geometry=peer?{left:peer.left,right:peer.right}:{left:0,right:model.width};
+ const owners=new Map(targets.map(v=>[v,model.staffs.find(s=>s.voice===v&&peerStaff&&s.system===peerStaff.system)||model.staffs.filter(s=>s.voice===v).at(-1)]));
+ if(mode==='insert'){const seen=new Set();for(const v of targets)for(const b of model.tracks[v]){if(b.number>=number)b.number++;seen.add(b)}for(const s of model.staffs)if(targets.includes(s.voice))for(const b of s.measures)if(!seen.has(b)&&b.number>=number)b.number++}
+ for(const v of targets){const b={number,voice:v,left:geometry.left,right:geometry.right,groups:[],issues:[],manual:true};model.tracks[v].push(b);model.tracks[v].sort((a,b)=>a.number-b.number);owners.get(v)?.measures.push({number})}
+ model.measures=Math.max(total,...model.tracks.flatMap(t=>t.map(b=>b.number)));refresh(model,meter);return {number,voices:targets,mode};
+}
 function toText(model){
  const meter=/^(\d+)\/(\d+)$/.exec(model.meter||'4/4'),span=Number(meter[1])*4/Number(meter[2]);
  return model.tracks.map((track,i)=>{let previous=null;return 'V'+(i+1)+': '+track.map(measure=>(measure.groups.length?measure.groups.map(group=>{
@@ -800,7 +902,7 @@ function toText(model){
   previous=group;return (group.tie?'~ ':'')+token(group)+':'+Number(group.beats.toFixed(8));
  }).join(' '):'0:'+span)+' |').join('\n')}).join('\n');
 }
-function validateState(state){
+function validateState(state,nested=false){
  const object=v=>v&&typeof v==='object'&&!Array.isArray(v),finite=v=>typeof v==='number'&&Number.isFinite(v);
  if(!object(state)||typeof state.filename!=='string'||state.filename.length>1000||state.sha256!==undefined&&typeof state.sha256!=='string')throw Error('工程图片来源记录无效。');
  const m=state.model;if(m!==null&&m!==undefined){
@@ -811,9 +913,14 @@ function validateState(state){
  if(state.controls!==undefined&&(!object(state.controls)||Object.values(state.controls).some(v=>typeof v!=='string'||v.length>1000)))throw Error('工程识别设置无效。');
  if(state.tableDraft!==undefined&&(!Array.isArray(state.tableDraft)||state.tableDraft.length>256||state.tableDraft.some(r=>!object(r)||typeof r.symbol!=='string'||r.symbol.length>200||typeof r.beats!=='string'||!Number.isInteger(r.index))))throw Error('工程识别校对草稿无效。');
  if(state.selection!==undefined&&(!object(state.selection)||!Number.isInteger(state.selection.voice)||state.selection.voice<0||state.selection.voice>3||!Number.isInteger(state.selection.measure)||state.selection.measure<0||state.selection.measure>1024))throw Error('工程识别校对位置无效。');
+ if(state.view!==undefined&&(!object(state.view)||!finite(state.view.zoom)||state.view.zoom<.1||state.view.zoom>4||!finite(state.view.left)||state.view.left<0||!finite(state.view.top)||state.view.top<0))throw Error('工程图片缩放或移动位置无效。');
+ if(state.pages!==undefined){
+  if(nested||!Array.isArray(state.pages)||!state.pages.length||state.pages.length>32||!Number.isInteger(state.selectedPage)||state.selectedPage<0||state.selectedPage>=state.pages.length)throw Error('工程图片页列表或当前页无效。');
+  for(const page of state.pages)validateState(page,true);
+ }
  return state;
 }
-const api={makeTemplates,analyze,refresh,toText,token,validateState};root.MusicOMR=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
+const api={makeTemplates,analyze,refresh,toText,token,validateState,checkMeasures,insertMeasure};root.MusicOMR=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
 </script>
 <script>(function(root){
@@ -821,16 +928,20 @@ const api={makeTemplates,analyze,refresh,toText,token,validateState};root.MusicO
 root.createMusicOMRUI=function(options){
  const $=id=>document.getElementById(id),canvas=$('omr-canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
  let image=null,model=null,filename='',sha256='',generation=0,templates=null,corrections=[],dirty=false,loading=false,viewVoice=0,viewMeasure=0;
+ let pages=[],activePage=-1,batchBusy=false,batchEpoch=0;
+ let measureUndo=null;
+ const viewport=$('omr-viewport');let zoom=.5,pan=null,suppressClick=false;
+ const shared=['name','bpm','key','meter','staves'],clone=v=>JSON.parse(JSON.stringify(v));
  const controls=['name','bpm','key','meter','staves','first'];
  function status(text,bad=false){$('omr-status').textContent=text;$('omr-status').classList.toggle('bad',bad)}
- function changed(){options.changed?.()}
+ function changed(){refreshPages();options.changed?.()}
  function settings(){return {name:$('omr-name').value,bpm:Number($('omr-bpm').value),tonic:$('omr-key').value,meter:$('omr-meter').value,staves:Number($('omr-staves').value),first:Number($('omr-first').value)}}
  function chosen(){return model?.tracks[Number($('omr-voice').value)]?.[Number($('omr-measure').value)]}
  function draw(){
   if(!model&&!image)return;
   const width=image?.width||model.width,height=image?.height||model.height;if(canvas.width!==width)canvas.width=width;if(canvas.height!==height)canvas.height=height;
   ctx.fillStyle='#fff';ctx.fillRect(0,0,width,height);if(image)ctx.drawImage(image,0,0);
-  canvas.style.width=width*Number($('omr-zoom').value)+'px';canvas.style.height=height*Number($('omr-zoom').value)+'px';
+  sizeImage();
   if(!model||!$('omr-boxes').checked)return;const selected=chosen();
   for(const issue of model.issues)if(issue.box){ctx.strokeStyle='#c34735';ctx.lineWidth=3;const b=issue.box;ctx.strokeRect(b.x-4,b.y-4,b.w+8,b.h+8)}
   for(const track of model.tracks)for(const measure of track){
@@ -838,19 +949,49 @@ root.createMusicOMRUI=function(options){
    if(measure.issues.length||measure===selected){const staff=model.staffs.find(s=>s.voice===measure.voice&&s.measures.some(m=>m.number===measure.number));if(staff){ctx.strokeStyle=measure.issues.length?'#c34735':'#134b78';ctx.lineWidth=3;ctx.strokeRect(measure.left,staff.cy-model.noteHeight*3.4,measure.right-measure.left,model.noteHeight*4.6)}}
   }
  }
+ function sizeImage(){canvas.style.width=canvas.width*zoom+'px';canvas.style.height=canvas.height*zoom+'px';$('omr-zoom').value=Math.round(zoom*100)+'%'}
+ function zoomAt(value,x,y){
+  const next=Math.max(.1,Math.min(4,value));if(next===zoom)return;
+  const left=(viewport.scrollLeft+x)/zoom,top=(viewport.scrollTop+y)/zoom;zoom=next;sizeImage();viewport.scrollLeft=left*zoom-x;viewport.scrollTop=top*zoom-y;options.changed?.();
+ }
+ function stopPan(e,cancel=false){
+  if(!pan||e&&e.pointerId!==pan.id)return;const old=pan;pan=null;viewport.classList.remove('panning');
+  if(old.target.hasPointerCapture(old.id))old.target.releasePointerCapture(old.id);
+  if(!cancel&&old.moved){suppressClick=true;options.changed?.()}
+ }
+ viewport.addEventListener('wheel',e=>{
+  if(!image&&!model||!e.deltaY)return;e.preventDefault();const r=viewport.getBoundingClientRect(),unit=e.deltaMode===1?16:e.deltaMode===2?viewport.clientHeight:1;
+  zoomAt(zoom*Math.exp(-Math.max(-600,Math.min(600,e.deltaY*unit))*.0015),e.clientX-r.left-viewport.clientLeft,e.clientY-r.top-viewport.clientTop);
+ },{passive:false});
+ viewport.addEventListener('pointerdown',e=>{
+  if(e.button!==0||pan||!image&&!model)return;const r=viewport.getBoundingClientRect();
+  if(e.clientX>=r.left+viewport.clientLeft+viewport.clientWidth||e.clientY>=r.top+viewport.clientTop+viewport.clientHeight)return;
+  suppressClick=false;pan={id:e.pointerId,x:e.clientX,y:e.clientY,left:viewport.scrollLeft,top:viewport.scrollTop,moved:false,target:e.target===canvas?canvas:viewport};pan.target.setPointerCapture(e.pointerId);
+ });
+ viewport.addEventListener('pointermove',e=>{
+  if(!pan||e.pointerId!==pan.id)return;const dx=e.clientX-pan.x,dy=e.clientY-pan.y;if(!pan.moved&&Math.hypot(dx,dy)<4)return;
+  pan.moved=true;viewport.classList.add('panning');e.preventDefault();viewport.scrollLeft=pan.left-dx;viewport.scrollTop=pan.top-dy;
+ });
+ viewport.addEventListener('pointerup',e=>stopPan(e));viewport.addEventListener('pointercancel',e=>stopPan(e,true));viewport.addEventListener('lostpointercapture',e=>stopPan(e,true));
+ viewport.addEventListener('click',e=>{if(suppressClick){suppressClick=false;e.preventDefault();e.stopImmediatePropagation()}},true);
+ $('omr-fit').onclick=()=>{if(!image&&!model)return;zoomAt(viewport.clientWidth/canvas.width,0,0);viewport.scrollLeft=0;viewport.scrollTop=0;options.changed?.()};
  function update(){
   if(!model)return;MusicOMR.refresh(model,$('omr-meter').value);
+  $('omr-corrections').hidden=false;
   const abnormal=model.tracks.flatMap(t=>t.filter(m=>m.issues.length)).length;
+  let alignmentError='';try{MusicOMR.checkMeasures(model)}catch(e){alignmentError=e.message}
   status(model.systems+' 组 · '+model.staves+' 个声部/组 · '+model.measures+' 小节 · '+model.groups+' 个音符/延音格\n'+(model.flagged?'有 '+model.flagged+' 处提示（拍数异常小节 '+abnormal+' 个），请对照图片校正。':'小节拍数检查通过；仍请核对音高、八度及连音。')+(model.issues.length?'\n'+model.issues.slice(0,4).map(i=>i.message).join('\n'):''));
-  $('omr-generate').disabled=loading||dirty||abnormal>0||!!(model.flagged&&!$('omr-reviewed').checked);$('omr-to-text').disabled=dirty;
+  if(alignmentError)status($('omr-status').textContent+'\n'+alignmentError,true);
+  $('omr-generate').disabled=loading||dirty||abnormal>0||!!alignmentError||!!(model.flagged&&!$('omr-reviewed').checked);$('omr-to-text').disabled=dirty;
   $('omr-next-issue').disabled=!model.flagged;draw();
+  $('omr-insert-measure').disabled=loading||batchBusy||dirty;$('omr-undo-measure').disabled=!measureUndo||dirty;
  }
  function voiceOptions(){
   $('omr-voice').replaceChildren();for(let i=0;i<model.tracks.length;i++){const o=document.createElement('option');o.value=i;o.textContent=model.tracks.length===2?(i?'左手 / 声部 2':'右手 / 声部 1'):'声部 '+(i+1);$('omr-voice').append(o)}
  }
  function measureOptions(index=0){
   $('omr-measure').replaceChildren();const first=Number($('omr-first').value)||1;
-  for(let i=0;i<(model?.tracks[Number($('omr-voice').value)]||[]).length;i++){const m=model.tracks[Number($('omr-voice').value)][i],o=document.createElement('option');o.value=i;o.textContent='第 '+(m.number+first-1)+' 小节'+(m.issues.length?' · 拍数异常':m.groups.some(g=>g.issues.length)?' · 待核对':'');$('omr-measure').append(o)}
+  for(let i=0;i<(model?.tracks[Number($('omr-voice').value)]||[]).length;i++){const m=model.tracks[Number($('omr-voice').value)][i],o=document.createElement('option');o.value=i;o.textContent='第 '+(m.number+first-1)+' 小节'+(m.manual?' · 手动增补':'')+(m.issues.length?' · 拍数异常':m.groups.some(g=>g.issues.length)?' · 待核对':'');$('omr-measure').append(o)}
   $('omr-measure').value=String(index);renderRows();
  }
  function addRow(group,index){
@@ -862,10 +1003,11 @@ root.createMusicOMRUI=function(options){
   const remove=document.createElement('button');remove.textContent='删格';remove.onclick=()=>{tr.remove();markDirty()};td().append(remove);
   for(const e of [symbol,beats,tie])e.oninput=markDirty;$('omr-rows').append(tr);
  }
- function markDirty(){dirty=true;$('omr-generate').disabled=true;$('omr-to-text').disabled=true;status('校对表有未保存修改，请先“保存这一小节的校正”。');changed()}
+ function markDirty(){dirty=true;$('omr-generate').disabled=true;$('omr-to-text').disabled=true;$('omr-insert-measure').disabled=true;$('omr-undo-measure').disabled=true;status('校对表有未保存修改，请先“保存这一小节的校正”。');changed()}
  function renderRows(){
   $('omr-rows').replaceChildren();const measure=chosen();if(!measure)return;measure.groups.forEach(addRow);dirty=false;
   viewVoice=Number($('omr-voice').value);viewMeasure=Number($('omr-measure').value);
+  $('omr-new-measure').value=measure.number;
   $('omr-measure-stats').textContent=Number(measure.beats.toFixed(4))+' 拍 / '+$('omr-meter').value;update();
  }
  function parseSymbol(text,old){
@@ -876,53 +1018,150 @@ root.createMusicOMRUI=function(options){
  }
  function writeMeasure(){
   try{const measure=chosen(),groups=[];for(const tr of $('omr-rows').children){const original=measure.groups[Number(tr.dataset.index)],group=parseSymbol(tr.querySelector('.omr-symbol').value,original),beats=Number(tr.querySelector('.omr-beats').value);if(!Number.isFinite(beats)||beats<=0||beats>64)throw Error('拍长须大于 0 且不超过 64。');group.beats=beats;group.tie=group.kind!=='hold'&&tr.querySelector('.omr-tie').checked;groups.push(group)}
-   corrections.push({voice:measure.voice,measure:measure.number,before:measure.groups.map(g=>({token:MusicOMR.token(g),beats:g.beats,tie:!!g.tie})),after:groups.map(g=>({token:MusicOMR.token(g),beats:g.beats,tie:!!g.tie}))});measure.groups=groups;dirty=false;$('omr-reviewed').checked=false;MusicOMR.refresh(model,$('omr-meter').value);measureOptions(Number($('omr-measure').value));changed();
+   measureUndo=null;corrections.push({voice:measure.voice,measure:measure.number,before:measure.groups.map(g=>({token:MusicOMR.token(g),beats:g.beats,tie:!!g.tie})),after:groups.map(g=>({token:MusicOMR.token(g),beats:g.beats,tie:!!g.tie}))});measure.groups=groups;dirty=false;$('omr-reviewed').checked=false;MusicOMR.refresh(model,$('omr-meter').value);measureOptions(Number($('omr-measure').value));changed();
   }catch(e){status(e.message,true)}
  }
- async function prepare(file){
-  const current=++generation;loading=true;let loaded=null;
-  try{if(file.size>20*1024*1024)throw Error('图片最大 20MB。');if(!/\.(png|jpe?g|webp|bmp)$/i.test(file.name))throw Error('自动识别支持 PNG / JPG / WebP / BMP 图片。PDF 请先导出清晰图片。');
-   $('omr-panel').open=true;status('正在载入图片…');const bitmap=await createImageBitmap(file);if(current!==generation){bitmap.close();return}
-   const scale=Math.min(1,2000/bitmap.width,4000/bitmap.height);loaded=document.createElement('canvas');loaded.width=Math.max(1,Math.round(bitmap.width*scale));loaded.height=Math.max(1,Math.round(bitmap.height*scale));loaded.getContext('2d').drawImage(bitmap,0,0,loaded.width,loaded.height);bitmap.close();
-   let hash='';if(crypto.subtle){const bytes=await file.arrayBuffer();hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('')}
+ function commonControls(){return Object.fromEntries(shared.map(k=>[k,$('omr-'+k).value]))}
+ function savePage(){if(activePage>=0){pages[activePage].state=capturePage();pages[activePage].image=image}}
+ function pageStates(){return pages.map((p,i)=>i===activePage?capturePage():p.state)}
+ function refreshPages(){
+  const busy=loading||batchBusy,states=pageStates();let ready=0,uncertain=0,drafts=0;
+  $('omr-pages').hidden=!states.length;$('omr-page').replaceChildren();
+  states.forEach((s,i)=>{let aligned=true;if(s.model){MusicOMR.refresh(s.model,$('omr-meter').value);ready++;try{MusicOMR.checkMeasures(s.model)}catch{aligned=false}if(!aligned||s.model.flagged&&!s.reviewed||s.model.tracks.some(t=>t.some(m=>m.issues.length)))uncertain++}if(s.tableDraft)drafts++;
+   const o=document.createElement('option');o.value=i;o.textContent=(i+1)+' / '+states.length+' · '+s.filename+' · '+(s.tableDraft?'校正未保存':!s.model?'未识别':!aligned?'小节缺失':s.model.flagged&&!s.reviewed||s.model.tracks.some(t=>t.some(m=>m.issues.length))?'待核对':'已核对');$('omr-page').append(o)});
+  $('omr-page').value=String(activePage);$('omr-page').disabled=busy;$('omr-file').disabled=busy;
+  $('omr-page-position').textContent=pages.length?'第 '+(activePage+1)+' / '+pages.length+' 页':'';
+  for(const id of ['omr-page-prev','omr-page-up'])$(id).disabled=busy||activePage<=0;
+  for(const id of ['omr-page-next','omr-page-down'])$(id).disabled=busy||activePage<0||activePage>=pages.length-1;
+  $('omr-page-remove').disabled=busy||!pages.length;$('omr-recognize-all').disabled=busy||!pages.length||ready===pages.length;
+  $('omr-to-text-all').disabled=busy||!pages.length||ready!==pages.length||!!drafts;
+  $('omr-generate-all').disabled=busy||!pages.length||ready!==pages.length||!!drafts||!!uncertain||states.some(s=>s.model?.staves!==Number($('omr-staves').value));
+  $('omr-page-summary').textContent='共 '+pages.length+' 页 · 已识别 '+ready+' 页 · 待核对 '+uncertain+' 页'+(drafts?' · 有 '+drafts+' 页校正未保存':'')+'。合并顺序与谱页列表一致。';
+  $('omr-recognize').disabled=busy||!image;if(busy){$('omr-generate').disabled=true;$('omr-to-text').disabled=true}
+ }
+ function selectPage(index,internal=false){
+  if(index<0||index>=pages.length||!internal&&(loading||batchBusy))return;
+  const common=commonControls();savePage();activePage=index;const entry=pages[index];
+  restorePage({...entry.state,controls:{...entry.state.controls,...common}},entry.image);changed();
+ }
+ async function prepareFiles(input){
+  const files=Array.from(input);if(!files.length)return;
+  if(loading||batchBusy){status('正在处理谱页，请完成后再添加图片。',true);return}
+  savePage();const current=++generation,staged=[],errors=[];let first=-1,added=0,attached=0;
+  loading=true;refreshPages();$('omr-panel').open=true;
+  try{
+   for(const file of files){
+    try{
+     if(file.size>20*1024*1024)throw Error('图片最大 20MB。');if(!/\.(png|jpe?g|webp|bmp)$/i.test(file.name))throw Error('支持 PNG / JPG / WebP / BMP；PDF 请先导出图片。');
+     status('正在载入 '+file.name+'…');const bitmap=await createImageBitmap(file);if(current!==generation){bitmap.close();return}
+     let loaded;try{const scale=Math.min(1,2000/bitmap.width,4000/bitmap.height);loaded=document.createElement('canvas');loaded.width=Math.max(1,Math.round(bitmap.width*scale));loaded.height=Math.max(1,Math.round(bitmap.height*scale));loaded.getContext('2d').drawImage(bitmap,0,0,loaded.width,loaded.height)}finally{bitmap.close()}
+     let hash='';if(crypto.subtle){const bytes=await file.arrayBuffer();hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('')}
+     if(current!==generation)return;staged.push({file,image:loaded,hash});
+    }catch(e){errors.push(file.name+'：'+e.message)}
+   }
    if(current!==generation)return;
-   const same=sha256&&sha256===hash;image=loaded;filename=file.name;sha256=hash;$('omr-filename').textContent=file.name+' · '+loaded.width+'×'+loaded.height;
-   if(!same){model=null;corrections=[];dirty=false;$('omr-reviewed').checked=false;$('omr-name').value=file.name.replace(/\.[^.]+$/,'')+'（图片识别）';$('omr-results').hidden=true;$('omr-generate').disabled=true;$('omr-to-text').disabled=true}
-   $('omr-recognize').disabled=false;status(same?'原图已重新关联，保留已校正结果。':'图片已载入。检查上方速度、调号、拍号和每组声部数，然后点击识别。');if(model)$('omr-results').hidden=false;draw();changed();
-  }catch(e){status(e.message,true)}finally{if(current===generation)loading=false;$('omr-file').value=''}
+   const common=commonControls();if(!pages.length&&staged.length&&common.name==='图片识别曲目')common.name=staged[0].file.name.replace(/\.[^.]+$/,'')+'（图片识别）';
+   for(const item of staged){let index=item.hash?pages.findIndex(p=>p.state.sha256===item.hash):-1;
+    if(index>=0){pages[index].image=item.image;attached++}
+    else{if(pages.length>=32){errors.push(item.file.name+'：一个工作区最多 32 张谱页。');continue}index=pages.length;pages.push({image:item.image,state:{filename:item.file.name,sha256:item.hash,model:null,controls:{...common,first:'1'},corrections:[],reviewed:false,selection:{voice:0,measure:0}}});added++}
+    if(first<0)first=index;
+   }
+   if(first>=0){activePage=first;restorePage({...pages[first].state,controls:{...pages[first].state.controls,...common}},pages[first].image)}
+   const message='已添加 '+added+' 页'+(attached?'，重新关联 '+attached+' 页原图并保留校正':'')+(errors.length?'；'+errors.join('；'):'。检查页序后，可识别全部未识别页。');status(message,!!errors.length);options.status(message,!!errors.length);changed();
+  }finally{if(current===generation)loading=false;$('omr-file').value='';refreshPages()}
  }
+ const prepare=file=>prepareFiles([file]);
  async function recognize(){
-  if(!image||loading)return;
-  try{loading=true;$('omr-recognize').disabled=true;status('正在识别数字、八度点、小节和时值…');await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));templates=templates||MusicOMR.makeTemplates();
-   const result=MusicOMR.analyze(image.getContext('2d',{willReadFrequently:true}).getImageData(0,0,image.width,image.height),templates,{staves:Number($('omr-staves').value),meter:$('omr-meter').value});model=result;corrections=[];dirty=false;$('omr-reviewed').checked=false;$('omr-results').hidden=false;voiceOptions();loading=false;measureOptions();changed();
-  }catch(e){status(e.message,true)}finally{loading=false;$('omr-recognize').disabled=!image}
+  if(!image||loading)return false;if(dirty){status('请先保存本小节校正，再重新识别。',true);return false}const current=generation;
+  try{loading=true;refreshPages();status('正在识别数字、八度点、小节和时值…');await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));if(current!==generation)return false;templates=templates||MusicOMR.makeTemplates();
+   const result=MusicOMR.analyze(image.getContext('2d',{willReadFrequently:true}).getImageData(0,0,image.width,image.height),templates,{staves:Number($('omr-staves').value),meter:$('omr-meter').value});model=result;measureUndo=null;corrections=[];dirty=false;$('omr-reviewed').checked=false;$('omr-results').hidden=false;voiceOptions();loading=false;measureOptions();changed();return true;
+  }catch(e){status(e.message,true);return false}finally{if(current===generation)loading=false;refreshPages()}
  }
- function text(){if(dirty)throw Error('请先保存校对表修改。');if(!model)throw Error('请先识别图片。');MusicOMR.refresh(model,$('omr-meter').value);return MusicOMR.toText(model)}
+ async function recognizeAll(){
+  if(loading||batchBusy)return;savePage();const initial=activePage,missing=pages.map((p,i)=>!p.state.model?i:-1).filter(i=>i>=0);
+  if(missing.some(i=>!pages[i].image)){status('请重新添加未识别页的原图，再批量识别。',true);return}
+  const epoch=++batchEpoch;batchBusy=true;refreshPages();let done=0;
+  try{for(const i of missing){selectPage(i,true);if(!await recognize())break;savePage();done++}}
+  finally{if(epoch===batchEpoch){batchBusy=false;if(initial>=0&&initial<pages.length)selectPage(initial,true);refreshPages();status('本次识别 '+done+' / '+missing.length+' 页。请逐页核对提示和小节拍数。',done!==missing.length);changed()}}
+ }
+ function text(){if(dirty)throw Error('请先保存校对表修改。');if(!model)throw Error('请先识别图片。');MusicOMR.checkMeasures(model);if(model.tracks.some(t=>t.some(b=>b.manual&&!b.groups.length)))throw Error('手动增补的小节尚未录入音符或休止，请先完成录入。');MusicOMR.refresh(model,$('omr-meter').value);return MusicOMR.toText(model)}
  function generate(){
   try{if(!model)throw Error('请先识别图片。');if(model.flagged&&!$('omr-reviewed').checked)throw Error('请先核对标记位置，校正或勾选已核对提示。');const cfg=settings();if(!Number.isSafeInteger(cfg.first)||cfg.first<1)throw Error('起始小节须为正整数。');if($('omr-bpm').value==='')throw Error('请填写 BPM。');
    if(cfg.staves!==model.staves)throw Error('每组声部数已改变，请按新设置重新识别。');
+   MusicOMR.checkMeasures(model);
    MusicOMR.refresh(model,cfg.meter);if(model.tracks.some(t=>t.some(m=>m.issues.length)))throw Error('仍有拍数异常的小节，请先校正；弱起或不完整尾小节可放入文字简谱区按原谱处理。');
    const result=MusicNotation.convert(text(),{name:cfg.name,bpm:cfg.bpm,tonic:cfg.tonic,meter:cfg.meter,mode:'numeric',unit:1,gate:95,pad:true,pickup:false,adapt:true});
    result.song.description+='\n来源：图片 '+filename+'；识别范围 '+model.measures+' 小节（起始编号 '+cfg.first+'）；图片识别结果已提供人工核对入口。';
    options.onConvert(result,{filename,sha256,model:JSON.parse(JSON.stringify(model)),settings:cfg,corrections:JSON.parse(JSON.stringify(corrections)),reviewed:!!$('omr-reviewed').checked});options.status('图片识别结果已新增为曲目，可试听、图上修改及导出 JSON / MIDI。');status('已生成：'+result.song.name+'。再次生成会新增曲目，保留原修改。');return true;
   }catch(e){status(e.message,true);options.status(e.message,true);return false}
  }
- function capture(){const cfg={};for(const field of controls)cfg[field]=$('omr-'+field).value;const state={filename,sha256,model,controls:cfg,corrections,reviewed:!!$('omr-reviewed').checked,selection:{voice:viewVoice,measure:viewMeasure}};if(dirty)state.tableDraft=Array.from($('omr-rows').children,tr=>({index:Number(tr.dataset.index),symbol:tr.querySelector('.omr-symbol').value,beats:tr.querySelector('.omr-beats').value,tie:tr.querySelector('.omr-tie').checked}));return state}
- function restore(state){
-  generation++;loading=false;image=null;dirty=false;state=state||{};filename=state.filename||'';sha256=state.sha256||'';model=state.model||null;corrections=state.corrections||[];
+ // The tracks own the editable notes and recognition boxes. Staff rows only
+ // need geometry and measure numbers after recognition; don't serialize a
+ // second copy of every measure plus the temporary glyph-segmentation cache.
+ function compactModel(m){return m?{...m,staffs:m.staffs.map(s=>{const {glyphs,...row}=s;return {...row,measures:s.measures.map(bar=>({number:bar.number}))}})}:null}
+ function capturePage(){const cfg={};for(const field of controls)cfg[field]=$('omr-'+field).value;const pending=!image&&!model?pages[activePage]?.state.view:null;const state={filename,sha256,model:compactModel(model),controls:cfg,corrections,reviewed:!!$('omr-reviewed').checked,selection:{voice:viewVoice,measure:viewMeasure},view:{zoom,left:pending?.left??viewport.scrollLeft,top:pending?.top??viewport.scrollTop}};if(dirty)state.tableDraft=Array.from($('omr-rows').children,tr=>({index:Number(tr.dataset.index),symbol:tr.querySelector('.omr-symbol').value,beats:tr.querySelector('.omr-beats').value,tie:tr.querySelector('.omr-tie').checked}));return state}
+ function capture(){const state=capturePage();if(pages.length){savePage();state.pages=pages.map(p=>({...p.state,model:compactModel(p.state.model),controls:{...p.state.controls,...commonControls()}}));state.selectedPage=activePage}return state}
+ function restorePage(state,cachedImage=null){
+  measureUndo=null;stopPan(null,true);suppressClick=false;generation++;loading=false;image=cachedImage;dirty=false;viewVoice=0;viewMeasure=0;state=state||{};zoom=state.view?.zoom??.5;filename=state.filename||'';sha256=state.sha256||'';model=state.model||null;corrections=state.corrections||[];
   for(const field of controls){const e=$('omr-'+field),value=state.controls?.[field];if(typeof value==='string')e.value=value}
   $('omr-reviewed').checked=!!state.reviewed;$('omr-recognize').disabled=true;$('omr-filename').textContent=filename?filename+' · 重新选择原图可对照校正':'尚未选择图片';$('omr-results').hidden=!model;
   if(model){voiceOptions();$('omr-voice').value=String(Math.max(0,Math.min(model.tracks.length-1,state.selection?.voice||0)));measureOptions(Math.max(0,Math.min(model.tracks[Number($('omr-voice').value)].length-1,state.selection?.measure||0)));if(state.tableDraft){$('omr-rows').replaceChildren();for(const row of state.tableDraft){addRow({kind:'note',notes:[{char:'0',octave:0,accidental:''}],beats:1,tie:row.tie,issues:[]},row.index);const tr=$('omr-rows').lastElementChild;tr.querySelector('.omr-symbol').value=row.symbol;tr.querySelector('.omr-beats').value=row.beats}markDirty()}else status('已恢复图片识别结果；重新选择同一原图可恢复对照图片，不会丢失校正。')}else{ctx.clearRect(0,0,canvas.width,canvas.height);$('omr-generate').disabled=true;$('omr-to-text').disabled=true;status('选择图片后点击识别。文件仅在本机处理，无需联网。')}
+  $('omr-corrections').hidden=!model;
+  if(image){$('omr-results').hidden=false;$('omr-filename').textContent=filename+' · '+image.width+'×'+image.height;$('omr-recognize').disabled=false;draw()}
+  viewport.scrollLeft=state.view?.left||0;viewport.scrollTop=state.view?.top||0;sizeImage();
  }
- $('omr-file').onchange=()=>{if($('omr-file').files[0])prepare($('omr-file').files[0])};$('omr-recognize').onclick=recognize;$('omr-generate').onclick=generate;
+ function restore(state){
+  generation++;batchEpoch++;batchBusy=false;state=state||{};
+  pages=(state.pages||((state.filename||state.model)?[state]:[])).map(s=>({state:clone(s),image:null}));activePage=pages.length?(state.selectedPage||0):-1;
+  restorePage(activePage>=0?pages[activePage].state:state);refreshPages();
+ }
+ function combinedText(strict){
+  const states=pageStates(),cfg=settings();if(!states.length)throw Error('请先添加简谱图片。');
+  const tracks=Array.from({length:cfg.staves},()=>[]);let offset=0;
+  for(let i=0;i<states.length;i++){
+   const s=states[i],prefix='第 '+(i+1)+' 页（'+s.filename+'）：';if(!s.model)throw Error(prefix+'尚未识别。');if(s.tableDraft)throw Error(prefix+'请先保存校正表。');
+   if(s.model.staves!==cfg.staves||s.model.tracks.length!==cfg.staves)throw Error(prefix+'声部数与当前设置不同，请核对后重新识别。');
+   try{MusicOMR.checkMeasures(s.model)}catch(e){throw Error(prefix+e.message)}
+   if(s.model.tracks.some(t=>t.some(b=>b.manual&&!b.groups.length)))throw Error(prefix+'手动增补小节尚未录入，请先追加音符或休止。');
+   MusicOMR.refresh(s.model,cfg.meter);
+   if(strict&&s.model.tracks.some(t=>t.some(m=>m.issues.length)))throw Error(prefix+'仍有拍数异常的小节，请先校正。');
+   if(strict&&s.model.flagged&&!s.reviewed)throw Error(prefix+'请先核对形状提示。');
+   const bars=Math.max(...s.model.tracks.map(t=>t.length));if(s.model.tracks.some(t=>t.length!==bars))throw Error(prefix+'各声部小节数不同，请先核对。');
+   s.model.tracks.forEach((t,voice)=>tracks[voice].push(...t.map((m,j)=>({...m,number:offset+j+1}))));offset+=bars;
+  }
+  return MusicOMR.toText({tracks,meter:cfg.meter});
+ }
+ function generateAll(){
+  try{
+   const notation=combinedText(true),cfg=settings();if(!Number.isSafeInteger(cfg.first)||cfg.first<1)throw Error('起始小节须为正整数。');if($('omr-bpm').value==='')throw Error('请填写 BPM。');
+   const result=MusicNotation.convert(notation,{name:cfg.name,bpm:cfg.bpm,tonic:cfg.tonic,meter:cfg.meter,mode:'numeric',unit:1,gate:95,pad:true,pickup:false,adapt:true}),source=clone(capture());
+   source.settings=cfg;result.song.description+='\n来源：按顺序合并 '+pages.length+' 张简谱图片：'+pages.map(p=>p.state.filename).join('、')+'。';
+   options.onConvert(result,source);status('已将 '+pages.length+' 页按顺序合并为：'+result.song.name);options.status('全部谱页已合并为一首曲目，可试听并导出 JSON / MIDI。');return true;
+  }catch(e){status(e.message,true);options.status(e.message,true);return false}
+ }
+ function movePage(delta){if(loading||batchBusy)return;savePage();const next=activePage+delta;if(next<0||next>=pages.length)return;[pages[activePage],pages[next]]=[pages[next],pages[activePage]];activePage=next;changed()}
+ $('omr-file').onchange=()=>prepareFiles(Array.from($('omr-file').files));$('omr-recognize').onclick=recognize;$('omr-generate').onclick=generate;
+ $('omr-page').onchange=()=>selectPage(Number($('omr-page').value));$('omr-page-prev').onclick=()=>selectPage(activePage-1);$('omr-page-next').onclick=()=>selectPage(activePage+1);
+ $('omr-page-up').onclick=()=>movePage(-1);$('omr-page-down').onclick=()=>movePage(1);
+ $('omr-page-remove').onclick=()=>{if(loading||batchBusy||activePage<0)return;const common=commonControls();pages.splice(activePage,1);activePage=Math.min(activePage,pages.length-1);restorePage(activePage<0?{controls:common}:{...pages[activePage].state,controls:{...pages[activePage].state.controls,...common}},pages[activePage]?.image);changed()};
+ $('omr-recognize-all').onclick=recognizeAll;$('omr-generate-all').onclick=generateAll;
+ $('omr-to-text-all').onclick=()=>{try{options.toText(combinedText(false),settings());options.status('全部谱页已按声部顺序放入文字简谱区。')}catch(e){status(e.message,true)}};
+ for(const field of shared)$('omr-'+field).addEventListener('input',()=>{refreshPages();options.changed?.()});
  $('omr-to-text').onclick=()=>{try{options.toText(text(),settings());options.status('识别结果已放入文字简谱区，可继续修改。')}catch(e){status(e.message,true)}};
  $('omr-voice').onchange=()=>{if(dirty){status('切换前请保存这一小节的校正。',true);$('omr-voice').value=String(viewVoice);return}measureOptions()};$('omr-measure').onchange=()=>{if(dirty){status('切换前请保存这一小节的校正。',true);$('omr-measure').value=String(viewMeasure);return}renderRows()};
  $('omr-write-measure').onclick=writeMeasure;$('omr-add-note').onclick=()=>{addRow({kind:'note',notes:[{char:'0',octave:0,accidental:''}],beats:1,tie:false,issues:['手动新增']},-1);markDirty()};
+ $('omr-insert-measure').onclick=()=>{try{
+  if(!model||dirty||loading||batchBusy)throw Error('请先完成识别并保存当前小节校正。');const before=clone(model),oldCorrections=clone(corrections),selection={voice:viewVoice,measure:viewMeasure};
+  const edit=MusicOMR.insertMeasure(model,{voice:Number($('omr-voice').value),number:Number($('omr-new-measure').value),scope:$('omr-new-measure-scope').value,mode:$('omr-new-measure-mode').value,meter:$('omr-meter').value});
+  measureUndo={model:before,corrections:oldCorrections,selection};corrections.push({action:'add-measure',...edit});$('omr-reviewed').checked=false;const targetVoice=edit.voices.includes(viewVoice)?viewVoice:edit.voices[0];$('omr-voice').value=targetVoice;measureOptions(model.tracks[targetVoice].findIndex(b=>b.number===edit.number));status('已增补本页第 '+edit.number+' 小节。请追加音符、填写拍长并保存；空小节不会生成曲目。');changed();
+ }catch(e){status(e.message,true)}};
+ $('omr-undo-measure').onclick=()=>{if(!measureUndo||dirty)return;const old=measureUndo;measureUndo=null;model=old.model;corrections=old.corrections;$('omr-voice').value=old.selection.voice;measureOptions(old.selection.measure);status('已撤销本次小节增补。');changed()};
  $('omr-reviewed').onchange=()=>{update();changed()};$('omr-meter').onchange=()=>{if(model){MusicOMR.refresh(model,$('omr-meter').value);if(!dirty)measureOptions()}};$('omr-first').oninput=()=>{if(model&&!dirty)measureOptions(Number($('omr-measure').value)||0)};
- $('omr-zoom').onchange=draw;$('omr-boxes').onchange=draw;
+ $('omr-boxes').onchange=draw;
  $('omr-next-issue').onclick=()=>{if(!model)return;if(dirty){status('请先保存这一小节的校正。',true);return}const list=model.tracks.flatMap((track,voice)=>track.map((measure,index)=>({voice,measure,index}))).filter(p=>p.measure.issues.length||p.measure.groups.some(g=>g.issues.length));if(!list.length)return;const old=list.findIndex(p=>p.voice===Number($('omr-voice').value)&&p.index===Number($('omr-measure').value)),next=list[(old+1)%list.length];$('omr-voice').value=next.voice;measureOptions(next.index)};
  canvas.onclick=e=>{if(!model||dirty)return;const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left)*canvas.width/rect.width,y=(e.clientY-rect.top)*canvas.height/rect.height;for(let voice=0;voice<model.tracks.length;voice++)for(let mi=0;mi<model.tracks[voice].length;mi++)if(model.tracks[voice][mi].groups.some(g=>(g.notes.length?g.notes:[g.box]).some(b=>b&&x>=b.x-6&&x<=b.x+b.w+6&&y>=b.y-6&&y<=b.y+b.h+6))){$('omr-voice').value=voice;measureOptions(mi);return}};
- return {prepare,recognize,generate,capture,restore,getState:()=>({image:!!image,model:!!model,filename,flagged:model?.flagged||0,measures:model?.measures||0,groups:model?.groups||0,dirty})};
+ refreshPages();
+ return {prepare,prepareFiles,recognize,generate,capture,restore,getState:()=>({image:!!image,model:!!model,filename,flagged:model?.flagged||0,measures:model?.measures||0,groups:model?.groups||0,dirty,pages:pages.length,selectedPage:activePage,busy:loading||batchBusy})};
 };
 })(typeof globalThis!=='undefined'?globalThis:this);
 </script>
@@ -1281,8 +1520,10 @@ function download(){
   }catch(e){status(e.message,true)}
 }
 async function importFiles(files){
+  files=Array.from(files);
+  if(files.length>1&&files.every(f=>/\.(png|jpe?g|webp|bmp)$/i.test(f.name))){await omrUI.prepareFiles(files);$('file').value='';return}
   if(Array.from(files).some(f=>/\.(txt|png|jpe?g|webp|gif|bmp|pdf)$/i.test(f.name))){
-    if(files.length!==1){status('简谱或参考图片/PDF 请一次导入一份。',true);$('file').value='';return}
+    if(files.length!==1){status('可一次导入多张简谱图片；TXT / PDF 请单独导入，图片不能与其他类型混选。',true);$('file').value='';return}
     await notationUI.prepare(files[0]);$('file').value='';return;
   }
   if(Array.from(files).some(f=>/\.(mid|midi)$/i.test(f.name))){
@@ -1305,7 +1546,7 @@ rollEditor=createMusicRollEditor({getBaseSong:()=>current(),getDisplaySong:()=>c
     $('song').options[selected].textContent=song.name;$('source').textContent=typeof song.description==='string'?song.description:'';inspect();textDirty()}
 });
 midiUI=createMusicMidiUI({status,onConvert:(result,filename)=>{const baseName=result.song.name;let suffix=2;while(library.some(r=>r.song.name===result.song.name))result.song.name=baseName+'（MIDI '+suffix+++'）';const i=addSong(result.song,filename);library[i].midiReport=copy(result.report);showSong(i)}});
-notationUI=createMusicNotationUI({status,changed:()=>workspace?.changed(),onImage:file=>omrUI?.prepare(file),onConvert:result=>{const baseName=result.song.name;let suffix=2;while(library.some(r=>r.song.name===result.song.name))result.song.name=baseName+'（简谱 '+suffix+++'）';const i=addSong(result.song,'简谱录入');library[i].notationSource=copy(result.source);library[i].notationReport=copy(result.report);showSong(i)}});
+notationUI=createMusicNotationUI({status,changed:()=>workspace?.changed(),onImages:files=>omrUI?.prepareFiles(files),onImage:file=>omrUI?.prepare(file),onConvert:result=>{const baseName=result.song.name;let suffix=2;while(library.some(r=>r.song.name===result.song.name))result.song.name=baseName+'（简谱 '+suffix+++'）';const i=addSong(result.song,'简谱录入');library[i].notationSource=copy(result.source);library[i].notationReport=copy(result.report);showSong(i)}});
 omrUI=createMusicOMRUI({status,changed:()=>workspace?.changed(),toText:(text,cfg)=>notationUI.loadText(text,{name:cfg.name,bpm:cfg.bpm,tonic:cfg.tonic,meter:cfg.meter,mode:'numeric',unit:1}),onConvert:(result,source)=>{const baseName=result.song.name;let suffix=2;while(library.some(r=>r.song.name===result.song.name))result.song.name=baseName+'（图片 '+suffix+++'）';const i=addSong(result.song,source.filename);library[i].notationSource=copy(result.source);library[i].notationReport=copy(result.report);library[i].omrSource=copy(source);showSong(i)}});
 function exportMidi(){
   try{inspect();const song=current(true),result=MusicMIDI.write(song),url=URL.createObjectURL(new Blob([result.bytes],{type:'audio/midi'})),a=document.createElement('a');
